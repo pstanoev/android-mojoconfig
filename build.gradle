@@ -1,5 +1,6 @@
 plugins {
   id 'groovy'
+  id 'java-gradle-plugin'
   id 'maven-publish'
 }
 
@@ -8,7 +9,7 @@ repositories {
 }
 
 configurations {
-	jarLibs
+	//jarLibs
 }
 
 dependencies {
@@ -16,20 +17,29 @@ dependencies {
     compile localGroovy()
     compile "com.typesafe:config:1.4.1"
     compile "com.squareup:kotlinpoet:1.10.2"
-    jarLibs "com.typesafe:config:1.4.1"
-    jarLibs "com.squareup:kotlinpoet:1.10.2"
+    //jarLibs "com.typesafe:config:1.4.1"
+    //jarLibs "com.squareup:kotlinpoet:1.10.2"
 }
 
 
-jar {
-	 from {
-        configurations.jarLibs.filter{ it.exists() }.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}
+//jar {
+//	 from {
+//       configurations.jarLibs.filter{ it.exists() }.collect { it.isDirectory() ? it : zipTree(it) }
+//    }
+//}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+
+gradlePlugin {
+    plugins {
+        mojoconfig {
+            id = 'com.github.pstanoev.android-mojoconfig'
+            implementationClass = 'com.pstanoev.MojoConfig'
+        }
+    }
+}
 
 publishing {
     repositories {
