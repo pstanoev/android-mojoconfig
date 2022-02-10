@@ -1,0 +1,8 @@
+userHome
+build
+.gradle
+/bin/
+/.settings/
+/local.properties
+/.classpath
+/.project

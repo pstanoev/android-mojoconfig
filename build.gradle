@@ -1,0 +1,58 @@
+plugins {
+  id 'groovy'
+  id 'maven'
+  id 'maven-publish'
+}
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	jarLibs
+}
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+    compile "com.typesafe:config:1.4.1"
+    compile "com.squareup:kotlinpoet:1.10.2"
+    jarLibs "com.typesafe:config:1.4.1"
+    jarLibs "com.squareup:kotlinpoet:1.10.2"
+}
+
+
+jar {
+	 from {
+        configurations.jarLibs.filter{ it.exists() }.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+uploadArchives {
+    configuration = configurations.archives
+    repositories.mavenDeployer {
+
+ 	 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        groupId = project.group
+        artifactId = project.hasProperty("artifact") ? project.artifact : project.name
+        version = project.version
+        description 'MojoConfig Android Configuration Generator'
+        url 'https://github.com/pstanoev/android-mojoconfig'
+      }
+    }
+  }
+
