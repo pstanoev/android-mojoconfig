@@ -21,7 +21,7 @@ The format of the file is HOCON (Human readable JSON).
 Example:
 
 
-``` json
+```
 rootProject {
   app {
 	  main {
@@ -121,7 +121,7 @@ Delete this file to make the plugin regenerate the config class even if the conf
 
 All options with default values:
 
-```
+``` groovy
 configureApp {
     configFile = new File(project.projectDir, "app.conf")
     enabled = true
@@ -135,7 +135,7 @@ configureApp {
 ## 7. Root project extensions
 To add ``rootProject.ext`` variables to the root project, add your key  value pairs in ``.ext`` of the root node:
 
-``` json
+```
 rootProject {
   
   # values that will be added added to rootProject.ext

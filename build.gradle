@@ -1,6 +1,5 @@
 plugins {
   id 'groovy'
-  id 'maven'
   id 'maven-publish'
 }
 
@@ -32,27 +31,20 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 
-uploadArchives {
-    configuration = configurations.archives
-    repositories.mavenDeployer {
-
- 	 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-      repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-        authentication(userName: ossrhUsername, password: ossrhPassword)
-      }
-
-      snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-        authentication(userName: ossrhUsername, password: ossrhPassword)
-      }
-
-      pom.project {
-        groupId = project.group
-        artifactId = project.hasProperty("artifact") ? project.artifact : project.name
-        version = project.version
-        description 'MojoConfig Android Configuration Generator'
-        url 'https://github.com/pstanoev/android-mojoconfig'
-      }
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/pstanoev/android-mojoconfig")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
     }
-  }
-
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
