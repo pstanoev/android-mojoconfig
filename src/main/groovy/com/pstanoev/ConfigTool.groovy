@@ -87,7 +87,7 @@ class ConfigTool {
 	}
     
     
-    private void configureGlobalProperties(File configFile, Config tConfig, Project rootProject) {
+    private static void configureGlobalProperties(File configFile, Config tConfig, Project rootProject) {
 	    if (!tConfig.hasPath("ext")) {
 	        println "MojoConfig: No root project extensions from config (rootProject.ext)"
 	        return

@@ -37,8 +37,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/pstanoev/android-mojoconfig")
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+                username = "pstanoev"
+                password = System.getenv("GPR_TOKEN")
             }
         }
     }
