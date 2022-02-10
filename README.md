@@ -20,61 +20,81 @@ The format of the file is HOCON (Human readable JSON).
 
 Example:
 
+`app.config`
 
 ```
 rootProject {
   app {
-	  main {
-	    enabled = false
-	    output {
-	      dir = "app/src/main/java"
-	      package = "com.company.app"
-	      className = "AppConfig"
-	    }
-	
-	    config {
-	      baseUrl = ""
-	      logHttpRequests = true
-	      refreshTime = 500
-	    }
-	  }
-	
-	  debug = ${rootProject.app.main} {
-	    enabled = true
-	    output {
-	      dir = "app/src/debug/java"
-	    }
-	
-	    config {
-	      baseUrl = "https://example.debug"
-	      refreshTime = 1000
-	    }
-	  }
-	
-	  release = ${rootProject.app.outputs.main} {
-	    enabled = true
-	    output {
-	      dir = "app/src/release/java"
-	    }
-	    config {
-	      baseUrl = "https://example.release"
-	      logHttpRequests = false
-	    }
-	  }
+    main {
+      enabled = false
+      output {
+        dir = "app/src/main/java"
+        package = "com.company.app"
+        className = "AppConfig"
+      }
+
+      config {
+        baseUrl = ""
+        logHttpRequests = true
+        refreshTime = 500
+      }
+    }
+
+    debug = ${rootProject.app.main} {
+      enabled = true
+      output {
+        dir = "app/src/debug/java"
+      }
+
+      config {
+        baseUrl = "https://example.debug"
+        refreshTime = 1000
+      }
+    }
+
+    release = ${rootProject.app.main} {
+      enabled = true
+      output {
+        dir = "app/src/release/java"
+      }
+      config {
+        baseUrl = "https://example.release"
+        logHttpRequests = false
+      }
+    }
   }
 }
 ```
 
 ## 2. Configure Gradle
+
+Add ``jitpack.io`` repository in your root project ``build.gradle`` and the dependency to the plugin:
+
+``` groovy
+buildscript {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+    
+    dependencies {
+        ...
+        classpath "com.github.pstanoev.android-mojoconfig:android-mojoconfig:0.2.0"
+    }
+    ...
+}
+```
+
 In your application ``build.gradle``:
 
 ``` groovy
-apply plugin: com.pstanoev.MojoConfig
+apply plugin: 'com.github.pstanoev.android-mojoconfig'
 
 configureApp {
     String configFilename = "app.conf"
     configFile = new File(buildscript.sourceFile.getParentFile(), configFilename)
 }
+
+preBuild.dependsOn 'configureApp'
 ```
 
 ## 3. Run
